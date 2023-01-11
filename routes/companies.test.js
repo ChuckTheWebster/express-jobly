@@ -132,6 +132,7 @@ describe("GET /companies", function () {
     });
   });
 
+  // TODO: add exact error language check
   test("fails: wrong key", async function () {
     const resp = await request(app)
       .get("/companies")

@@ -154,6 +154,7 @@ describe("findAll", function () {
     const filters = {minEmployees: 3, maxEmployees: 2};
     try {
       await Company.findAll(filters);
+      throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
     }
