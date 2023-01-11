@@ -82,8 +82,81 @@ describe("findAll", function () {
         description: "Desc3",
         numEmployees: 3,
         logoUrl: "http://c3.img",
-      },
+      }
     ]);
+  });
+
+  test("works: with nameLike filter", async function () {
+    const filters = {nameLike: "c1"};
+    let companies = await Company.findAll(filters);
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img"
+      }
+    ]);
+  });
+
+  test("works: with minEmployees filter", async function () {
+    const filters = {minEmployees: 2};
+    let companies = await Company.findAll(filters);
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      }
+    ]);
+  });
+
+  test("works: with maxEmployees filter", async function () {
+    const filters = {maxEmployees: 1};
+    let companies = await Company.findAll(filters);
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img"
+      }
+    ]);
+  });
+
+  test("works: with all filters", async function () {
+    const filters = {nameLike: "c2", minEmployees: 2, maxEmployees: 2};
+    let companies = await Company.findAll(filters);
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      }
+    ]);
+  });
+
+  // TODO: Ask is this better than our SQL test???
+  test("fails: minEmployees exceeds maxEmployees", async function () {
+    const filters = {minEmployees: 3, maxEmployees: 2};
+    try {
+      await Company.findAll(filters);
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
 

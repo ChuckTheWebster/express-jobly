@@ -96,6 +96,49 @@ describe("GET /companies", function () {
     });
   });
 
+  test("works with one filter", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({nameLike: "C1"});
+    expect(resp.body).toEqual({
+      companies:
+          [
+            {
+              handle: "c1",
+              name: "C1",
+              description: "Desc1",
+              numEmployees: 1,
+              logoUrl: "http://c1.img",
+            }
+          ]
+    });
+  });
+
+  test("works with all filter", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({nameLike: "C1", minEmployees: 1, maxEmployees: 3});
+    expect(resp.body).toEqual({
+      companies:
+          [
+            {
+              handle: "c1",
+              name: "C1",
+              description: "Desc1",
+              numEmployees: 1,
+              logoUrl: "http://c1.img",
+            }
+          ]
+    });
+  });
+
+  test("fails: wrong key", async function () {
+    const resp = await request(app)
+      .get("/companies")
+      .query({nameLike: "C1", test: "wrong"});
+    expect(resp.statusCode).toEqual(400);
+  });
+
   test("fails: test next() handler", async function () {
     // there's no normal failure event which will cause this route to fail ---
     // thus making it hard to test that the error-handler works with it. This
