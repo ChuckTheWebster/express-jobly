@@ -38,8 +38,35 @@ function ensureLoggedIn(req, res, next) {
     return next();
 }
 
+/** Middleware to use when they must be admin.
+ *
+ * If not, raises Unauthorized.
+ */
+
+function ensureAdmin(req, res, next) {
+  if (!res.locals.user || !res.locals.user.isAdmin) {
+    throw new UnauthorizedError('Only admins can access');
+  }
+  return next();
+}
+
+/** Middleware to ensure user is either admin or relevant user.
+ *
+ * If not, raises Unauthorized.
+ */
+
+function ensureAdminOrCorrectUser(req, res, next) {
+  const user = res.locals?.user;
+  // TODO: intelligent way to format long conditionals?
+  if (!(user?.isAdmin || user?.username === req.params.username)) {
+    throw new UnauthorizedError();
+  }
+  return next();
+}
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureAdmin,
+  ensureAdminOrCorrectUser,
 };
