@@ -45,7 +45,7 @@ function ensureLoggedIn(req, res, next) {
 
 function ensureAdmin(req, res, next) {
   if (!res.locals.user || !res.locals.user.isAdmin) {
-    throw new UnauthorizedError('Only admins can access');
+    throw new UnauthorizedError();
   }
   return next();
 }
@@ -56,9 +56,11 @@ function ensureAdmin(req, res, next) {
  */
 
 function ensureAdminOrCorrectUser(req, res, next) {
-  const user = res.locals?.user;
-  // TODO: intelligent way to format long conditionals?
-  if (!(user?.isAdmin || user?.username === req.params.username)) {
+  const user = res.locals.user;
+  // Don't use ? often and assign the part of the expression that returns t/f to a variable
+  // Use the inverse and drop the not
+  // Maybe think further about how to clean this up
+  if (!(user && (user.isAdmin || user.username === req.params.username))) {
     throw new UnauthorizedError();
   }
   return next();

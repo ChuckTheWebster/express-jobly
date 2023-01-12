@@ -49,6 +49,46 @@ class Company {
     return company;
   }
 
+
+  /** Makes a where clause if filters are passed in. Throws an error if
+   * search parameters are invalid. Returns object of where clause and array of values.
+  *
+  * filters: object {nameLike, minEmployees, maxEmployees} (optional)
+  *
+  * returns: object {values: array, where: string}
+  */
+
+  static #makeWhereClause(filters) {
+   const { nameLike, minEmployees, maxEmployees } = filters
+
+   if (maxEmployees < minEmployees) {
+     throw new BadRequestError('Max employees must be greater than or equal to min');
+    }
+
+    let values = [];
+    let whereSub = [];
+
+    if (nameLike !== undefined) {
+      whereSub.push(`name ILIKE $${values.length + 1}`);
+      values.push(`%${nameLike}%`);
+    }
+    if (minEmployees !== undefined) {
+      whereSub.push(`num_employees >= $${values.length + 1}`);
+      values.push(minEmployees);
+    }
+    if (maxEmployees !== undefined) {
+      whereSub.push(`num_employees <= $${values.length + 1}`);
+      values.push(maxEmployees);
+    }
+
+    let where = '';
+    if (whereSub.length > 0) {
+      where = `WHERE ${whereSub.join(' AND ')}`
+    }
+
+    return {values, where};
+  }
+
   /** Find all companies with optional search filtering.
    *
    * filters: object {nameLike, minEmployyes, maxEmployees} (optional keys)
@@ -57,49 +97,12 @@ class Company {
    * */
 
   static async findAll(filters = {}) {
-    /** Makes a where clause if filters are passed in. Throws an error if
-     * search parameters are invalid. Returns object of where clause and array of values.
-     *
-     * filters: object {nameLike, minEmployees, maxEmployees} (optional)
-     *
-     * returns: object {values: array, where: string}
-     */
-    function _makeWhereClause(filters) {
-      const { nameLike, minEmployees, maxEmployees } = filters
 
-      if (maxEmployees < minEmployees) {
-        throw new BadRequestError('Max employees must be greater than or equal to min');
-      }
-
-      let values = [];
-      let whereSub = [];
-
-      if (nameLike !== undefined) {
-        whereSub.push(`name ILIKE $${values.length + 1}`);
-        values.push(`%${nameLike}%`);
-      }
-      if (minEmployees !== undefined) {
-        whereSub.push(`num_employees >= $${values.length + 1}`);
-        values.push(minEmployees);
-      }
-      if (maxEmployees !== undefined) {
-        whereSub.push(`num_employees <= $${values.length + 1}`);
-        values.push(maxEmployees);
-      }
-
-      let where = '';
-      if (whereSub.length > 0) {
-        where = `WHERE ${whereSub.join(' AND ')}`
-      }
-
-      return {values, where};
-    }
-
-    const where = _makeWhereClause(filters);
+    const where = this.#makeWhereClause(filters);
 
     const companiesRes = await db.query(
-        `SELECT handle,
-                name,
+      `SELECT handle,
+      name,
                 description,
                 num_employees AS "numEmployees",
                 logo_url AS "logoUrl"
