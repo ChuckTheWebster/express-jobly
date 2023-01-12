@@ -1,7 +1,7 @@
 'use strict';
 
 const db = require('../db');
-const {} = require('../expressError');
+const { NotFoundError } = require('../expressError');
 const { sqlForPartialUpdate } = require('../helpers/sql');
 
 /** Related functions for jobs */
