@@ -124,7 +124,7 @@ describe("GET /companies", function () {
     });
   });
 
-  test("works with all filter", async function () {
+  test("works with all filters", async function () {
     const resp = await request(app)
       .get("/companies")
       .query({nameLike: "C1", minEmployees: 1, maxEmployees: 3});
