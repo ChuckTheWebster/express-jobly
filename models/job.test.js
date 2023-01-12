@@ -70,7 +70,7 @@ describe("findAll", function() {
         title: 'j4',
         salary: null,
         equity: null,
-        companyHandle: 'c4',
+        companyHandle: 'c3',
       }
     ]);
   });
@@ -151,13 +151,6 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
-      },
-      {
-        id: jobIds[3],
-        title: 'j4',
-        salary: null,
-        equity: null,
-        companyHandle: 'c4',
       }
     ]);
   });
