@@ -23,23 +23,20 @@ describe('create', function() {
     title: 'test',
     salary: 10,
     equity: '0.1',
-    companyHandle: 'c1'
+    companyHandle: 'c1',
   };
 
   test('works', async function() {
     const job = await Job.create(newJob);
     expect(job).toEqual({
       id: expect.any(Number),
-      title: 'test',
-      salary: 10,
-      equity: '0.1',
-      companyHandle: 'c1'
+      ...newJob,
     });
   });
 });
 
 /******************************** findAll */
-
+// TODO: Update relevant tests with company names
 describe("findAll", function() {
   test('works with no filters', async function() {
     const jobs = await Job.findAll();
@@ -71,7 +68,7 @@ describe("findAll", function() {
         salary: null,
         equity: null,
         companyHandle: 'c3',
-      }
+      },
     ]);
   });
 
@@ -127,7 +124,7 @@ describe("findAll", function() {
       }
     ]);
   });
-
+// TODO: add last company
   test('works with hasEquity false filter', async function() {
     const jobs = await Job.findAll({ hasEquity: false });
     expect(jobs).toEqual([
@@ -174,7 +171,7 @@ describe("findAll", function() {
 });
 
 /******************************** get */
-
+// TODO: add company info
 describe('get', function() {
   test('works', async function() {
     const job = await Job.get(jobIds[0]);
@@ -216,22 +213,6 @@ describe('update', function() {
     });
   });
 
-  test('bad request if additional parameter', async function() {
-    const newData = {
-      title: 'update',
-      salary: 4,
-      equity: '0.4',
-      nope: 'nope'
-    };
-
-    try {
-      await Job.update(jobIds[0], newData);
-      throw new Error("fail test, you shouldn't get here");
-    } catch (err) {
-      expect(err instanceof BadRequestError).toBeTruthy();
-    }
-  });
-
   test('bad request if no update data', async function() {
     try {
       await Job.update(jobIds[0], {});
@@ -256,8 +237,6 @@ describe('update', function() {
 describe('remove', function() {
   test('works', async function() {
     await Job.remove(jobIds[0]);
-    // Was going to use get here and see if it threw 404, but is that
-    // kosher in unit tests?
     const response = await db.query(
       `SELECT id FROM jobs WHERE id=$1`, [jobIds[0]]
     );
@@ -266,7 +245,7 @@ describe('remove', function() {
 
   test('404 if no job', async function() {
     try {
-      await Job.remove(jobIds[0]);
+      await Job.remove(0);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();

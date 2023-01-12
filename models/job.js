@@ -33,7 +33,7 @@ class Job {
    * search parameters are invalid. Returns object of where clause and array of values.
   *
   * filters: object {title, hasEquity, minSalary} (optional)
-  *
+  * TODO: Add an example of valid input and output
   * returns: object {values: array, where: string}
   */
 
@@ -51,7 +51,7 @@ class Job {
       whereSub.push(`salary >= $${values.length + 1}`);
       values.push(minSalary);
     }
-    if (hasEquity !== undefined) {
+    if (hasEquity === true) {
       whereSub.push(`equity > 0`);
     }
 
@@ -62,7 +62,7 @@ class Job {
 
     return {values, where};
   }
-
+// TODO: GENERAL THING add company name (and whatever else is useful), when you query a job
    /** Find all jobs with optional search filtering.
     *
     * filters: object {title, hasEquity, minSalary} (optional keys)
@@ -72,20 +72,21 @@ class Job {
 
    static async findAll(filters = {}) {
 
-     const where = this.#makeWhereClause(filters);
+    // TODO: Destructure the where to make it cleaner later
+    const where = this.#makeWhereClause(filters);
 
-     const jobsRes = await db.query(
-       `SELECT id,
-                title,
-                salary,
-                equity,
-                company_handle AS "companyHandle"
-            FROM jobs
-            ${where.where}
-            ORDER BY title`, where.values);
-     return jobsRes.rows;
+    const jobsRes = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+          FROM jobs
+          ${where.where}
+          ORDER BY title`, where.values);
+    return jobsRes.rows;
    }
-
+// TODO: This time maybe get everything about the company because it's only one job
    /** Given a job id, return data about job.
    *
    * Returns { id, title, salary, equity, companyHandle }

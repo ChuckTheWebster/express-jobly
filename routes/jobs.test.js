@@ -12,7 +12,7 @@ const {
   commonAfterAll,
   u1Token,
   adminToken,
-  jobIds
+  jobIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -26,7 +26,7 @@ describe("POST /jobs", function () {
   const newJob = {
     title: "JOB",
     salary: 7,
-    equity: ".7",
+    equity: "0.7",
     companyHandle: "c1"
   };
 
@@ -83,7 +83,7 @@ describe("GET /jobs", function () {
   test("ok for anon", async function () {
     const resp = await request(app).get("/jobs");
     expect(resp.body).toEqual({
-      companies:
+      jobs:
           [
             {
               id: jobIds[0],
@@ -123,7 +123,7 @@ describe("GET /jobs", function () {
       .get("/jobs")
       .query({minSalary: 2})
     expect(resp.body).toEqual({
-      companies:
+      jobs:
           [
             {
               id: jobIds[1],
@@ -149,7 +149,7 @@ describe("GET /jobs", function () {
       .get("/jobs")
       .query( {minSalary: 2, hasEquity: true, title: "j3"} )
     expect(resp.body).toEqual({
-      companies:
+      jobs:
           [
             {
               id: jobIds[2],
@@ -274,7 +274,8 @@ describe('DELETE /jobs/:id', function() {
 
   test('404 for no found job', async function() {
     const resp = await request(app)
-      .delete(`/jobs/0`);
+      .delete(`/jobs/0`)
+      .set("authorization", `Bearer ${adminToken}`);
     expect(resp.statusCode).toEqual(404);
   });
 });
