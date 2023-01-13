@@ -250,7 +250,16 @@ describe('applyToJob', function() {
       job_id: jobIds[1],
     })
   });
-// TODO: Add test about dupe request
+
+  test('bad request if duplicate application', async function() {
+    try {
+      await User.applyToJob('u1', jobIds[0]);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  })
+
   test('not found if no user', async function() {
     try {
       await User.applyToJob('wrong', jobIds[0]);

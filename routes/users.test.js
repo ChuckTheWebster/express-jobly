@@ -403,6 +403,13 @@ describe("POST /users/:username/jobs/:id", function() {
     expect(resp.statusCode).toEqual(201);
   });
 
+  test("fails for duplicate request", async function() {
+    const resp = await request(app)
+      .post(`/users/u1/jobs/${jobIds[0]}`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(400);
+  });
+
   test("fails for incorrect user", async function() {
     const resp = await request(app)
       .post(`/users/u2/jobs/${jobIds[0]}`)

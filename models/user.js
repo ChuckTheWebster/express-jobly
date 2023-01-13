@@ -221,7 +221,6 @@ class User {
    */
 
   static async applyToJob(username, jobId) {
-    // TODO: Check for duplicate application
     const appRes = await db.query(
       `SELECT job_id
         FROM applications
