@@ -43,6 +43,13 @@ async function commonBeforeAll() {
   for (let r of result.rows) {
     jobIds.push(r.id);
   }
+
+  await db.query(
+    `INSERT INTO applications (username,
+                                job_id)
+      VALUES ($1, $2)`,
+    ['u1', jobIds[0]]
+  );
 }
 
 async function commonBeforeEach() {

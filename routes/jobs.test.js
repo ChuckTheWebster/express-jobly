@@ -91,6 +91,7 @@ describe("GET /jobs", function () {
               salary: 1,
               equity: '0.1',
               companyHandle: 'c1',
+              companyName: 'C1',
             },
             {
               id: jobIds[1],
@@ -98,6 +99,7 @@ describe("GET /jobs", function () {
               salary: 2,
               equity: '0.2',
               companyHandle: 'c2',
+              companyName: 'C2',
             },
             {
               id: jobIds[2],
@@ -105,6 +107,7 @@ describe("GET /jobs", function () {
               salary: 3,
               equity: '0.3',
               companyHandle: 'c3',
+              companyName: 'C3',
             },
             {
               id: jobIds[3],
@@ -112,6 +115,7 @@ describe("GET /jobs", function () {
               salary: null,
               equity: null,
               companyHandle: 'c3',
+              companyName: 'C3',
             }
           ],
     });
@@ -131,6 +135,7 @@ describe("GET /jobs", function () {
               salary: 2,
               equity: '0.2',
               companyHandle: 'c2',
+              companyName: 'C2',
             },
             {
               id: jobIds[2],
@@ -138,6 +143,7 @@ describe("GET /jobs", function () {
               salary: 3,
               equity: '0.3',
               companyHandle: 'c3',
+              companyName: 'C3',
             }
           ],
     });
@@ -157,6 +163,7 @@ describe("GET /jobs", function () {
               salary: 3,
               equity: '0.3',
               companyHandle: 'c3',
+              companyName: 'C3',
             }
           ]
     });
@@ -184,6 +191,13 @@ describe("GET /jobs/:id", function () {
         salary: 1,
         equity: '0.1',
         companyHandle: 'c1',
+        company: {
+          description: 'Desc1',
+          handle: 'c1',
+          logoUrl: 'http://c1.img',
+          name: 'C1',
+          numEmployees: 1,
+        }
       }
     });
     expect(resp.statusCode).toEqual(200);

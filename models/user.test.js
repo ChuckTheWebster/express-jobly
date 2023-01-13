@@ -12,6 +12,7 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  jobIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -140,6 +141,9 @@ describe("get", function () {
       lastName: "U1L",
       email: "u1@email.com",
       isAdmin: false,
+      jobs: [
+        jobIds[0]
+      ]
     });
   });
 
@@ -222,6 +226,43 @@ describe("remove", function () {
   test("not found if no such user", async function () {
     try {
       await User.remove("nope");
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
+/************************************** apply */
+
+describe('applyToJob', function() {
+  test('works', async function() {
+    await User.apply('u2', jobIds[1]);
+    const resp = await db.query(
+      `SELECT username,
+              job_id
+        FROM applications
+        WHERE job_id=$1`,
+      [jobIds[1]]
+    );
+    expect(resp.rows[0]).toEqual({
+      username: 'u2',
+      job_id: jobIds[1],
+    })
+  });
+
+  test('not found if no user', async function() {
+    try {
+      await User.apply('wrong', jobIds[0]);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test('not found if no job', async function() {
+    try {
+      await User.apply('u1', 0);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
