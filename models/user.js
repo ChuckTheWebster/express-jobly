@@ -228,10 +228,11 @@ class User {
         WHERE username = $1`,
       [username]
     );
-    const userApps = result.rows;
+    const userApps = appRes.rows;
+    console.log(appRes.rows);
 
     for (let userApp of userApps) {
-      if (userApp[job_id] === jobId) {
+      if (userApp.job_id === jobId) {
         throw new BadRequestError('Cannot apply same user to same job multiple times');
       }
     }
