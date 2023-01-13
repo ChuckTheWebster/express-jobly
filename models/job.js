@@ -33,8 +33,10 @@ class Job {
    * search parameters are invalid. Returns object of where clause and array of values.
   *
   * filters: object {title, hasEquity, minSalary} (optional)
-  * TODO: Add an example of valid input and output
+  *   ex: {title: 'title', hasEquity: true, minSalary: 2}
+  *
   * returns: object {values: array, where: string}
+  *   ex: {values: ['title', 2], where: 'WHERE title ILIKE $1 AND salary >= $2}
   */
 
   static #makeWhereClause(filters) {
@@ -62,8 +64,8 @@ class Job {
 
     return {values, where};
   }
-// TODO: GENERAL THING add company name (and whatever else is useful), when you query a job
-   /** Find all jobs with optional search filtering.
+
+  /** Find all jobs with optional search filtering.
     *
     * filters: object {title, hasEquity, minSalary} (optional keys)
     *
@@ -72,21 +74,22 @@ class Job {
 
    static async findAll(filters = {}) {
 
-    // TODO: Destructure the where to make it cleaner later
-    const where = this.#makeWhereClause(filters);
+    const { where, values } = this.#makeWhereClause(filters);
 
     const jobsRes = await db.query(
-      `SELECT id,
-              title,
-              salary,
-              equity,
-              company_handle AS "companyHandle"
-          FROM jobs
-          ${where.where}
-          ORDER BY title`, where.values);
+      `SELECT j.id,
+              j.title,
+              j.salary,
+              j.equity,
+              j.company_handle AS "companyHandle",
+              c.name AS "companyName"
+          FROM jobs AS j
+          JOIN companies AS c ON c.handle = j.company_handle
+          ${where}
+          ORDER BY title`, values);
     return jobsRes.rows;
    }
-// TODO: This time maybe get everything about the company because it's only one job
+
    /** Given a job id, return data about job.
    *
    * Returns { id, title, salary, equity, companyHandle }
@@ -108,6 +111,19 @@ class Job {
     const job = jobRes.rows[0];
 
     if (!job) throw new NotFoundError(`No job: ${id}`);
+
+    const companiesRes = await db.query(
+      `SELECT handle,
+              name,
+              description,
+              num_employees AS "numEmployees",
+              logo_url AS "logoUrl"
+        FROM companies
+        WHERE handle = $1`,
+      [job.companyHandle]
+    );
+
+    job.company = companiesRes.rows[0];
 
     return job;
   }

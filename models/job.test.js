@@ -36,7 +36,7 @@ describe('create', function() {
 });
 
 /******************************** findAll */
-// TODO: Update relevant tests with company names
+
 describe("findAll", function() {
   test('works with no filters', async function() {
     const jobs = await Job.findAll();
@@ -47,6 +47,7 @@ describe("findAll", function() {
         salary: 1,
         equity: '0.1',
         companyHandle: 'c1',
+        companyName: 'C1',
       },
       {
         id: jobIds[1],
@@ -54,6 +55,7 @@ describe("findAll", function() {
         salary: 2,
         equity: '0.2',
         companyHandle: 'c2',
+        companyName: 'C2',
       },
       {
         id: jobIds[2],
@@ -61,6 +63,7 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
+        companyName: 'C3',
       },
       {
         id: jobIds[3],
@@ -68,6 +71,7 @@ describe("findAll", function() {
         salary: null,
         equity: null,
         companyHandle: 'c3',
+        companyName: 'C3',
       },
     ]);
   });
@@ -81,6 +85,7 @@ describe("findAll", function() {
         salary: 1,
         equity: '0.1',
         companyHandle: 'c1',
+        companyName: 'C1',
       }
     ]);
   });
@@ -94,6 +99,7 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
+        companyName: 'C3',
       }
     ]);
   });
@@ -107,6 +113,7 @@ describe("findAll", function() {
         salary: 1,
         equity: '0.1',
         companyHandle: 'c1',
+        companyName: 'C1',
       },
       {
         id: jobIds[1],
@@ -114,6 +121,7 @@ describe("findAll", function() {
         salary: 2,
         equity: '0.2',
         companyHandle: 'c2',
+        companyName: 'C2',
       },
       {
         id: jobIds[2],
@@ -121,10 +129,11 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
+        companyName: 'C3',
       }
     ]);
   });
-// TODO: add last company
+
   test('works with hasEquity false filter', async function() {
     const jobs = await Job.findAll({ hasEquity: false });
     expect(jobs).toEqual([
@@ -134,6 +143,7 @@ describe("findAll", function() {
         salary: 1,
         equity: '0.1',
         companyHandle: 'c1',
+        companyName: 'C1',
       },
       {
         id: jobIds[1],
@@ -141,6 +151,7 @@ describe("findAll", function() {
         salary: 2,
         equity: '0.2',
         companyHandle: 'c2',
+        companyName: 'C2',
       },
       {
         id: jobIds[2],
@@ -148,7 +159,16 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
-      }
+        companyName: 'C3',
+      },
+      {
+        id: jobIds[3],
+        title: 'j4',
+        salary: null,
+        equity: null,
+        companyHandle: 'c3',
+        companyName: 'C3',
+      },
     ]);
   });
 
@@ -165,13 +185,14 @@ describe("findAll", function() {
         salary: 3,
         equity: '0.3',
         companyHandle: 'c3',
+        companyName: 'C3',
       },
     ]);
   });
 });
 
 /******************************** get */
-// TODO: add company info
+
 describe('get', function() {
   test('works', async function() {
     const job = await Job.get(jobIds[0]);
@@ -181,6 +202,13 @@ describe('get', function() {
       salary: 1,
       equity: '0.1',
       companyHandle: 'c1',
+      company: {
+        handle: 'c1',
+        name: 'C1',
+        description: 'Desc1',
+        numEmployees: 1,
+        logoUrl: 'http://c1.img',
+      }
     });
   });
 

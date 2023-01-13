@@ -150,7 +150,6 @@ describe("findAll", function () {
     ]);
   });
 
-  // TODO: Ask is this better than our SQL test???
   test("fails: minEmployees exceeds maxEmployees", async function () {
     const filters = {minEmployees: 3, maxEmployees: 2};
     try {

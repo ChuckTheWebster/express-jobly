@@ -42,7 +42,6 @@ describe("POST /companies", function () {
     });
   });
 
-  // TODO: Rigorous debate on if it's worthwhile to add error message
   test("fail for non-admin", async function () {
     const resp = await request(app)
         .post("/companies")
@@ -143,7 +142,6 @@ describe("GET /companies", function () {
     });
   });
 
-  // TODO: add exact error language check
   test("fails: wrong key", async function () {
     const resp = await request(app)
       .get("/companies")

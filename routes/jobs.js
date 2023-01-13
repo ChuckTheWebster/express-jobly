@@ -38,9 +38,9 @@ router.post("/", ensureAdmin, async function (req, res, next) {
   const job = await Job.create(req.body);
   return res.status(201).json({ job });
 });
-// TODO: company name
+
 /** GET /  =>
- *   { jobs: [ { id, title, salary, equity, companyHandle }, ...] }
+ *   { jobs: [ { id, title, salary, equity, companyHandle, companyName }, ...] }
  *
  * Can filter on provided search filters:
  * - minSalary
@@ -72,10 +72,11 @@ router.get("/", async function (req, res, next) {
   const jobs = await Job.findAll(query);
   return res.json({ jobs });
 });
-// TODO: add all company info
+
 /** GET /[id]  =>  { job }
  *
- *  Job is { id, title, salary, equity, companyHandle }
+ *  Job is { id, title, salary, equity, companyHandle, company }
+ *    where company is { handle, name, description, numEmployees, logoUrl }
  *
  * Authorization required: none
  */
