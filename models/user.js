@@ -219,8 +219,9 @@ class User {
    * username: string - username of user applying for job
    * jobId: number - id of job being applied to
    */
-
+// TODO: change name here and elsewhere to applyToJob
   static async apply(username, jobId) {
+    // TODO: Check for duplicate application
     const userRes = await db.query(
       `SELECT username
         FROM users

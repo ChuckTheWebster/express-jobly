@@ -250,7 +250,7 @@ describe('applyToJob', function() {
       job_id: jobIds[1],
     })
   });
-
+// TODO: Add test about dupe request
   test('not found if no user', async function() {
     try {
       await User.apply('wrong', jobIds[0]);
