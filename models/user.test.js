@@ -237,7 +237,7 @@ describe("remove", function () {
 
 describe('applyToJob', function() {
   test('works', async function() {
-    await User.apply('u2', jobIds[1]);
+    await User.applyToJob('u2', jobIds[1]);
     const resp = await db.query(
       `SELECT username,
               job_id
@@ -253,7 +253,7 @@ describe('applyToJob', function() {
 // TODO: Add test about dupe request
   test('not found if no user', async function() {
     try {
-      await User.apply('wrong', jobIds[0]);
+      await User.applyToJob('wrong', jobIds[0]);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
@@ -262,7 +262,7 @@ describe('applyToJob', function() {
 
   test('not found if no job', async function() {
     try {
-      await User.apply('u1', 0);
+      await User.applyToJob('u1', 0);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();

@@ -93,7 +93,7 @@ async function commonBeforeAll() {
   jobIds[2] = j3.id;
   jobIds[3] = j4.id;
 
-  await User.apply('u1', jobIds[0]);
+  await User.applyToJob('u1', jobIds[0]);
 }
 
 async function commonBeforeEach() {

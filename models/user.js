@@ -219,9 +219,23 @@ class User {
    * username: string - username of user applying for job
    * jobId: number - id of job being applied to
    */
-// TODO: change name here and elsewhere to applyToJob
-  static async apply(username, jobId) {
+
+  static async applyToJob(username, jobId) {
     // TODO: Check for duplicate application
+    const appRes = await db.query(
+      `SELECT job_id
+        FROM applications
+        WHERE username = $1`,
+      [username]
+    );
+    const userApps = result.rows;
+
+    for (let userApp of userApps) {
+      if (userApp[job_id] === jobId) {
+        throw new BadRequestError('Cannot apply same user to same job multiple times');
+      }
+    }
+
     const userRes = await db.query(
       `SELECT username
         FROM users
